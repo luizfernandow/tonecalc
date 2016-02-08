@@ -29,8 +29,8 @@ print 'Has ', correct, 'corrects and ', wrong, 'wrongs'
 timeTotal = (time.time() - start_time) + wrong * 25
 print("--- %s seconds ---" % timeTotal)
 
-con = lite.connect('points.db')
-with con:
+try:
+    con = lite.connect('points.db')
     con.row_factory = lite.Row
     cur = con.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS Points(time_point FLOAT)")
@@ -41,7 +41,13 @@ with con:
     cur.execute("SELECT avg(time_point) as avg FROM Points")
     row = cur.fetchone()
     print("--- Your average is %s seconds ---" % row['avg'])
-if con:
-    con.close()
 
+except lite.Error, e:
 
+    print "Error %s:" % e.args[0]
+    sys.exit(1)
+
+finally:
+
+    if con:
+        con.close()
