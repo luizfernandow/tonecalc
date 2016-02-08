@@ -1,7 +1,11 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 from itertools import cycle
 from random import randint
 import random
 import time
+import sqlite3 as lite
+import sys
 
 tunes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 guitar = [2, 4, 7, 9, 11]
@@ -19,6 +23,22 @@ for x in range(0, 10):
     else:
         wrong += 1
 print 'Has ', correct, 'corrects and ', wrong, 'wrongs'
-print("--- %s seconds ---" % (time.time() - start_time))
+timeTotal = (time.time() - start_time) + wrong * 25
+print("--- %s seconds ---" % timeTotal)
+
+con = lite.connect('points.db')
+with con:
+    con.row_factory = lite.Row
+    cur = con.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS Points(time_point FLOAT)")
+    cur.execute("INSERT INTO Points (time_point) VALUES(?)", (timeTotal,))
+    cur.execute("SELECT min(time_point) as best FROM Points")
+    row = cur.fetchone()
+    print("--- Your best is %s seconds ---" % row['best'])
+    cur.execute("SELECT avg(time_point) as avg FROM Points")
+    row = cur.fetchone()
+    print("--- Your average is %s seconds ---" % row['avg'])
+if con:
+    con.close()
 
 
