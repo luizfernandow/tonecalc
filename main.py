@@ -7,6 +7,9 @@ import time
 import sqlite3 as lite
 import sys
 
+print '---------------------------------------------------------'
+print '------------- Tonecalc. Exercise your brain -------------'
+print '---------------------------------------------------------'
 tunes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 guitar = [2, 4, 7, 9, 11]
 lenT = len(tunes)
